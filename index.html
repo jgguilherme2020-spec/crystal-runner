@@ -1,0 +1,107 @@
+﻿<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Crystal Runner — Plataforma Cyber 2D</title>
+  <meta name="description" content="Jogo de plataforma 2D original. Corra com Astra, use pulo duplo, colete gemas e alcance o portal!" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body>
+
+  <!-- TELA: MENU PRINCIPAL -->
+  <div id="screen-menu" class="screen active">
+    <div class="menu-bg"></div>
+    <div class="menu-content">
+      <div class="logo-wrap">
+        <h1 class="logo">CRYSTAL<span>RUNNER</span></h1>
+        <p class="logo-sub">CYBER PLATFORM ADVENTURE</p>
+      </div>
+
+      <div class="menu-buttons">
+        <button id="btn-play" class="btn-primary"><span class="btn-icon">&#9654;</span> JOGAR</button>
+        <button id="btn-howto" class="btn-secondary">&#10067; COMO JOGAR</button>
+        <button id="btn-sound-toggle" class="btn-secondary">&#128266; SOM: ON</button>
+      </div>
+
+      <div class="menu-footer">
+        <p>Use <kbd>A</kbd><kbd>D</kbd> para mover | <kbd>Space</kbd> para Pulo Duplo | <kbd>Shift</kbd> para Dash</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- TELA: COMO JOGAR -->
+  <div id="screen-howto" class="screen">
+    <div class="howto-content">
+      <h2>COMO JOGAR</h2>
+      <ul class="howto-list">
+        <li>💎 Colete as <strong>Gemas de Cristal</strong> espalhadas pelo mapa.</li>
+        <li>🌀 Alcance o <strong>Portal Warp</strong> no final para passar de fase.</li>
+        <li>⚡ Aperte pulo <kbd>Space</kbd> 2x no ar para o <strong>Pulo Duplo</strong>.</li>
+        <li>💨 Aperte <kbd>Shift</kbd> no ar/chão para dar um <strong>Dash de Energia</strong>!</li>
+        <li>🤖 Desvie ou pule em cima dos Drones e Slimes para destruí-los.</li>
+      </ul>
+      <button id="btn-back" class="btn-secondary">&#8592; VOLTAR</button>
+    </div>
+  </div>
+
+  <!-- TELA: JOGO (CANVAS) -->
+  <div id="screen-game" class="screen">
+    <div id="hud">
+      <div class="hud-item"><span class="hud-label">SETOR</span><span class="hud-val" id="hud-level">01</span></div>
+      <div class="hud-item"><span class="hud-label">GEMAS</span><span class="hud-val" id="hud-coins">💎 0</span></div>
+      <div class="hud-item"><span class="hud-label">SCORE</span><span class="hud-val" id="hud-score">000000</span></div>
+      <div class="hud-item"><span class="hud-label">ENERGIA</span><span class="hud-val" id="hud-lives">⚡ 100%</span></div>
+    </div>
+
+    <canvas id="game-canvas"></canvas>
+
+    <!-- Controles Touch -->
+    <div id="touch-controls">
+      <div class="touch-group left-group">
+        <button id="touch-left" class="touch-btn">&#9664;</button>
+        <button id="touch-right" class="touch-btn">&#9654;</button>
+      </div>
+      <div class="touch-group right-group">
+        <button id="touch-dash" class="touch-btn touch-dash-btn">💨 DASH</button>
+        <button id="touch-jump" class="touch-btn touch-jump-btn">⚡ PULAR</button>
+      </div>
+    </div>
+
+    <div id="phase-msg" class="phase-msg hidden"></div>
+  </div>
+
+  <!-- TELA: GAME OVER -->
+  <div id="screen-gameover" class="screen">
+    <div class="gameover-content">
+      <h2>SISTEMA FALHOU</h2>
+      <div class="gameover-stats">
+        <div class="stat-row"><span>Pontuação Final</span><span id="go-score">0</span></div>
+        <div class="stat-row"><span>Gemas Coletadas</span><span id="go-coins">0</span></div>
+        <div class="stat-row"><span>Melhor Recorde</span><span id="go-best">0</span></div>
+      </div>
+      <button id="btn-restart" class="btn-primary">&#128260; TENTAR NOVAMENTE</button>
+      <button id="btn-menu" class="btn-secondary">&#127968; MENU PRINCIPAL</button>
+    </div>
+  </div>
+
+  <!-- TELA: VITÓRIA FINAL -->
+  <div id="screen-win" class="screen">
+    <div class="win-content">
+      <div class="win-trophy">🔮</div>
+      <h2>MISSÃO CUMPRIDA!</h2>
+      <p>Você dominou todos os setores e coletou a energia de Cristal!</p>
+      <div class="gameover-stats">
+        <div class="stat-row"><span>Pontuação Final</span><span id="win-score">0</span></div>
+        <div class="stat-row"><span>Melhor Recorde</span><span id="win-best">0</span></div>
+      </div>
+      <button id="btn-win-menu" class="btn-primary">&#127968; VOLTAR AO MENU</button>
+    </div>
+  </div>
+
+  <script type="module" src="src/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,30 @@
+﻿{
+  "name": "crystal-runner",
+  "version": "1.0.0",
+  "description": "Jogo de plataforma 2D cibernético com HTML5 Canvas e Web Audio API",
+  "type": "module",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js",
+    "dev": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jgguilherme2020-spec/crystal-runner.git"
+  },
+  "keywords": [
+    "game",
+    "platformer",
+    "canvas",
+    "html5",
+    "javascript",
+    "cyberpunk",
+    "arcade"
+  ],
+  "author": "jgguilherme2020-spec",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/jgguilherme2020-spec/crystal-runner/issues"
+  },
+  "homepage": "https://github.com/jgguilherme2020-spec/crystal-runner#readme"
+}
