@@ -5,8 +5,7 @@
   "type": "module",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js",
-    "build": "echo 'Build estatico concluido com sucesso'"
+    "dev": "node server.js"
   },
   "repository": {
     "type": "git",
