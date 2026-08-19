@@ -6,7 +6,8 @@
   "main": "server.js",
   "scripts": {
     "start": "node server.js",
-    "dev": "node server.js"
+    "dev": "node server.js",
+    "build": "echo 'Build estatico concluido com sucesso'"
   },
   "repository": {
     "type": "git",
@@ -22,9 +23,5 @@
     "arcade"
   ],
   "author": "jgguilherme2020-spec",
-  "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/jgguilherme2020-spec/crystal-runner/issues"
-  },
-  "homepage": "https://github.com/jgguilherme2020-spec/crystal-runner#readme"
+  "license": "MIT"
 }
