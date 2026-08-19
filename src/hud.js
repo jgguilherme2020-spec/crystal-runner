@@ -4,6 +4,7 @@
       menu: document.getElementById('screen-menu'),
       howto: document.getElementById('screen-howto'),
       game: document.getElementById('screen-game'),
+      pause: document.getElementById('screen-pause'),
       gameover: document.getElementById('screen-gameover'),
       win: document.getElementById('screen-win')
     };
@@ -19,16 +20,24 @@
 
   showScreen(name) {
     Object.keys(this.screens).forEach(k => {
-      if (k === name) this.screens[k].classList.add('active');
-      else this.screens[k].classList.remove('active');
+      if (this.screens[k]) {
+        if (k === name) {
+          this.screens[k].classList.add('active');
+        } else if (name === 'pause' && k === 'game') {
+          // Mantem a tela do jogo ativa de fundo quando pausado
+          this.screens['game'].classList.add('active');
+        } else {
+          this.screens[k].classList.remove('active');
+        }
+      }
     });
   }
 
   update(levelId, coins, score, lives) {
     if (this.elements.level) this.elements.level.innerText = levelId;
-    if (this.elements.coins) this.elements.coins.innerText = `✨ ${coins}`;
+    if (this.elements.coins) this.elements.coins.innerText = `💎 ${coins}`;
     if (this.elements.score) this.elements.score.innerText = String(Math.floor(score)).padStart(6, '0');
-    if (this.elements.lives) this.elements.lives.innerText = `❤️ x${lives}`;
+    if (this.elements.lives) this.elements.lives.innerText = `⚡ ${lives}`;
   }
 
   showPhaseMessage(text) {

@@ -22,7 +22,9 @@ class Game {
     this.gemsCount = 0;
     this.lives = 3;
     this.isRunning = false;
+    this.isPaused = false;
     this.lastTime = 0;
+    this._pauseKeyWasPressed = false;
 
     this.player = null;
     this.enemies = [];
@@ -45,9 +47,34 @@ class Game {
       soundBtn.innerText = this.audio.enabled ? '🔊 SOM: ON' : '🔇 SOM: OFF';
     });
 
+    // Pause UI
+    document.getElementById('btn-pause-hud').addEventListener('click', () => this.togglePause());
+    document.getElementById('btn-resume').addEventListener('click', () => this.togglePause());
+    document.getElementById('btn-pause-restart').addEventListener('click', () => {
+      this.isPaused = false;
+      this._loadLevel(this.levelIdx);
+      this.hud.showScreen('game');
+    });
+    document.getElementById('btn-pause-menu').addEventListener('click', () => {
+      this.isPaused = false;
+      this.isRunning = false;
+      this.hud.showScreen('menu');
+    });
+
+    // Game Over & Win UI (Reinicia do inicio absoluto)
     document.getElementById('btn-restart').addEventListener('click', () => this.startNewGame());
     document.getElementById('btn-menu').addEventListener('click', () => this.hud.showScreen('menu'));
     document.getElementById('btn-win-menu').addEventListener('click', () => this.hud.showScreen('menu'));
+  }
+
+  togglePause() {
+    if (!this.isRunning) return;
+    this.isPaused = !this.isPaused;
+    if (this.isPaused) {
+      this.hud.showScreen('pause');
+    } else {
+      this.hud.showScreen('game');
+    }
   }
 
   startNewGame() {
@@ -55,6 +82,7 @@ class Game {
     this.score = 0;
     this.gemsCount = 0;
     this.lives = 3;
+    this.isPaused = false;
     this._loadLevel(this.levelIdx);
     this.hud.showScreen('game');
     this.isRunning = true;
@@ -73,6 +101,12 @@ class Game {
     this.particles = [];
 
     this.hud.showPhaseMessage(`${lvlData.id}\n${lvlData.name}`);
+  }
+
+  _respawnPlayerAtStart() {
+    const lvlData = LEVELS[this.levelIdx];
+    this.player.reset(lvlData.playerStart.x, lvlData.playerStart.y);
+    this.hud.showPhaseMessage('⚡ PERDEU VIDA!\nVOLTANDO AO INÍCIO');
   }
 
   _spawnParticles(x, y, color) {
@@ -104,7 +138,7 @@ class Game {
     const p = this.player;
     if (p.isDead) return;
 
-    // 1. Coleta de Gemas 💎 espalhadas pelo mapa
+    // 1. Coleta de Gemas 💎
     for (const gem of this.gems) {
       if (gem.collected) continue;
       const overlapX = (p.x < gem.x + gem.width) && (p.x + p.width > gem.x);
@@ -127,7 +161,6 @@ class Game {
       const overlapY = (p.y < enemy.y + enemy.height) && (p.y + p.height > enemy.y);
 
       if (overlapX && overlapY) {
-        // Pulo sobre o inimigo ou Golpe de Dash
         if ((p.vy > 0 && p.y + p.height - p.vy <= enemy.y + 10) || p.isDashing) {
           enemy.squish();
           p.stompBounce();
@@ -135,13 +168,14 @@ class Game {
           this.audio.playStomp();
           this._spawnParticles(enemy.x + 13, enemy.y + 12, '#ff007f');
         } else {
-          // Dano lateral
           const tookDamage = p.takeDamage();
           if (tookDamage) {
             this.lives--;
             this.audio.playHurt();
             if (this.lives <= 0) {
               p.isDead = true;
+            } else {
+              this._respawnPlayerAtStart();
             }
           }
         }
@@ -156,23 +190,33 @@ class Game {
       if (tookDamage) {
         this.lives--;
         this.audio.playHurt();
-        if (this.lives <= 0) p.isDead = true;
+        if (this.lives <= 0) {
+          p.isDead = true;
+        } else {
+          this._respawnPlayerAtStart();
+        }
       }
     }
 
-    // 4. Morte do jogador
-    if (p.isDead) {
+    // 4. Morte por queda no abismo ou 0 vidas
+    if (p.y > this.levelMap.length * TILE_SIZE + 50 && !p.isDead) {
+      this.lives--;
+      this.audio.playHurt();
       if (this.lives <= 0) {
-        this.isRunning = false;
-        SaveDataManager.setHighScore(this.score);
-        const best = SaveDataManager.getHighScore();
-        document.getElementById('go-score').innerText = Math.floor(this.score);
-        document.getElementById('go-coins').innerText = this.gemsCount;
-        document.getElementById('go-best').innerText = Math.floor(best);
-        this.hud.showScreen('gameover');
+        p.isDead = true;
       } else {
-        this._loadLevel(this.levelIdx);
+        this._respawnPlayerAtStart();
       }
+    }
+
+    if (p.isDead) {
+      this.isRunning = false;
+      SaveDataManager.setHighScore(this.score);
+      const best = SaveDataManager.getHighScore();
+      document.getElementById('go-score').innerText = Math.floor(this.score);
+      document.getElementById('go-coins').innerText = this.gemsCount;
+      document.getElementById('go-best').innerText = Math.floor(best);
+      this.hud.showScreen('gameover');
     }
 
     // 5. Entrada no Portal Warp
@@ -189,53 +233,48 @@ class Game {
     if (dt > 0.1) dt = 0.1;
     this.lastTime = now;
 
+    // Detecta tecla de Pause
+    if (this.input.pause && !this._pauseKeyWasPressed) {
+      this.togglePause();
+    }
+    this._pauseKeyWasPressed = this.input.pause;
+
     const currentLevel = LEVELS[this.levelIdx];
 
-    // Atualiza Jogador
-    this.player.update(
-      this.input,
-      this.levelMap,
-      this.audio,
-      (x, y, color) => this._spawnParticles(x, y, color),
-      dt
-    );
+    if (!this.isPaused) {
+      this.player.update(
+        this.input,
+        this.levelMap,
+        this.audio,
+        (x, y, color) => this._spawnParticles(x, y, color),
+        dt
+      );
 
-    // Atualiza Inimigos & Objetos
-    for (const enemy of this.enemies) enemy.update(this.levelMap);
-    for (const gem of this.gems) gem.update(dt);
-    if (this.portal) this.portal.update(dt);
+      for (const enemy of this.enemies) enemy.update(this.levelMap);
+      for (const gem of this.gems) gem.update(dt);
+      if (this.portal) this.portal.update(dt);
 
-    // Colisões
-    this._handleCollisions();
+      this._handleCollisions();
 
-    // Partículas
-    for (let i = this.particles.length - 1; i >= 0; i--) {
-      this.particles[i].update(dt);
-      if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+      for (let i = this.particles.length - 1; i >= 0; i--) {
+        this.particles[i].update(dt);
+        if (this.particles[i].life <= 0) this.particles.splice(i, 1);
+      }
+
+      this.renderer.updateCamera(this.player.x, currentLevel.width);
     }
 
-    // Câmera
-    this.renderer.updateCamera(this.player.x, currentLevel.width);
-
-    // RENDERIZACÃO
     this.renderer.clear();
     this.renderer.drawBackground(currentLevel);
     this.renderer.drawMap(this.levelMap);
 
-    // Desenha Gemas
     for (const gem of this.gems) gem.draw(this.renderer.ctx, this.renderer.cameraX);
-
-    // Desenha Portal
     if (this.portal) this.portal.draw(this.renderer.ctx, this.renderer.cameraX);
-
-    // Desenha Inimigos
     for (const enemy of this.enemies) enemy.draw(this.renderer.ctx, this.renderer.cameraX);
 
-    // Desenha Jogador & Partículas
     this.player.draw(this.renderer.ctx, this.renderer.cameraX);
     for (const p of this.particles) p.draw(this.renderer.ctx, this.renderer.cameraX);
 
-    // HUD
     this.hud.update(currentLevel.id, this.gemsCount, this.score, this.lives);
 
     requestAnimationFrame(t => this._loop(t));

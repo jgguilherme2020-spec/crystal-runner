@@ -173,6 +173,25 @@ html, body {
   text-shadow: 0 0 12px var(--clr-primary);
 }
 
+/* ===== BOTAO PAUSE NO HUD ===== */
+.btn-pause-icon {
+  background: var(--clr-panel);
+  border: 1.5px solid var(--clr-border);
+  color: var(--clr-primary);
+  border-radius: 8px;
+  width: 42px; height: 42px;
+  font-size: 1rem;
+  cursor: pointer;
+  pointer-events: auto;
+  display: flex; align-items: center; justify-content: center;
+  backdrop-filter: blur(8px);
+  transition: all 0.2s;
+}
+.btn-pause-icon:hover {
+  background: rgba(0, 242, 254, 0.2);
+  transform: scale(1.06);
+}
+
 /* ===== CONTROLES TOUCH ===== */
 #touch-controls {
   position: absolute; bottom: 1.5rem; left: 1.5rem; right: 1.5rem;
@@ -231,6 +250,33 @@ html, body {
   border-radius: 16px; backdrop-filter: blur(16px);
 }
 .phase-msg.hidden { display: none; }
+
+/* ===== TELA DE PAUSE ===== */
+#screen-pause {
+  background: rgba(9, 10, 16, 0.85);
+  backdrop-filter: blur(12px);
+}
+.pause-content {
+  width: min(380px, 90vw);
+  background: var(--clr-panel);
+  border: 1.5px solid var(--clr-border);
+  border-radius: 20px;
+  padding: 2.2rem;
+  display: flex; flex-direction: column;
+  align-items: center; gap: 1.8rem;
+  box-shadow: 0 25px 60px rgba(0,0,0,0.8);
+}
+.pause-content h2 {
+  font-family: var(--font-game);
+  color: var(--clr-primary);
+  font-size: 1.5rem;
+  text-shadow: 0 0 20px var(--clr-primary);
+  letter-spacing: 2px;
+}
+.pause-buttons {
+  display: flex; flex-direction: column;
+  gap: 1.2rem; width: 100%;
+}
 
 /* ===== GAME OVER & WIN ===== */
 #screen-gameover, #screen-win {

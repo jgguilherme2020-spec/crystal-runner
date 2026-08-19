@@ -1,10 +1,8 @@
-﻿// input.js — Teclado + Touch com suporte a Dash e Pulo Duplo
+﻿// input.js — Teclado + Touch com suporte a Pause
 export class InputManager {
   constructor() {
     this.keys = {};
     this.touchState = { left: false, right: false, jump: false, dash: false };
-    this._jumpPressed = false;
-    this._dashPressed = false;
     this._setupEvents();
   }
 
@@ -53,5 +51,9 @@ export class InputManager {
 
   get dash() {
     return !!(this.keys['ShiftLeft'] || this.keys['ShiftRight'] || this.keys['KeyK'] || this.touchState.dash);
+  }
+
+  get pause() {
+    return !!(this.keys['KeyP'] || this.keys['Escape']);
   }
 }

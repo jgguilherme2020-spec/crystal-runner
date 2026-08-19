@@ -28,7 +28,7 @@
       </div>
 
       <div class="menu-footer">
-        <p>Use <kbd>A</kbd><kbd>D</kbd> para mover | <kbd>Space</kbd> para Pulo Duplo | <kbd>Shift</kbd> para Dash</p>
+        <p>Use <kbd>A</kbd><kbd>D</kbd> para mover | <kbd>Space</kbd> Pulo Duplo | <kbd>Shift</kbd> Dash | <kbd>P</kbd> Pause</p>
       </div>
     </div>
   </div>
@@ -42,7 +42,7 @@
         <li>🌀 Alcance o <strong>Portal Warp</strong> no final para passar de fase.</li>
         <li>⚡ Aperte pulo <kbd>Space</kbd> 2x no ar para o <strong>Pulo Duplo</strong>.</li>
         <li>💨 Aperte <kbd>Shift</kbd> no ar/chão para dar um <strong>Dash de Energia</strong>!</li>
-        <li>🤖 Desvie ou pule em cima dos Drones e Slimes para destruí-los.</li>
+        <li>⏸️ Aperte <kbd>P</kbd> ou <kbd>Esc</kbd> a qualquer momento para pausar.</li>
       </ul>
       <button id="btn-back" class="btn-secondary">&#8592; VOLTAR</button>
     </div>
@@ -55,6 +55,7 @@
       <div class="hud-item"><span class="hud-label">GEMAS</span><span class="hud-val" id="hud-coins">💎 0</span></div>
       <div class="hud-item"><span class="hud-label">SCORE</span><span class="hud-val" id="hud-score">000000</span></div>
       <div class="hud-item"><span class="hud-label">ENERGIA</span><span class="hud-val" id="hud-lives">⚡ 100%</span></div>
+      <button id="btn-pause-hud" class="btn-pause-icon" title="Pausar Jogo">&#10074;&#10074;</button>
     </div>
 
     <canvas id="game-canvas"></canvas>
@@ -72,6 +73,18 @@
     </div>
 
     <div id="phase-msg" class="phase-msg hidden"></div>
+  </div>
+
+  <!-- TELA: PAUSE -->
+  <div id="screen-pause" class="screen">
+    <div class="pause-content">
+      <h2>JOGO PAUSADO</h2>
+      <div class="pause-buttons">
+        <button id="btn-resume" class="btn-primary">&#9654; CONTINUAR</button>
+        <button id="btn-pause-restart" class="btn-secondary">&#128260; REINICIAR FASE</button>
+        <button id="btn-pause-menu" class="btn-secondary">&#127968; MENU PRINCIPAL</button>
+      </div>
+    </div>
   </div>
 
   <!-- TELA: GAME OVER -->
